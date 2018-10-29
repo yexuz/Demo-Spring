@@ -1,0 +1,24 @@
+*bin/
+*.class
+/.idea
+target/
+.project
+.classpath
+*.iml
+.settings/
+.svn/
+.DS_Store
+*bin/
+Servers/
+
+# Package Files #
+*.jar
+build-bootstrap.jar
+*.war
+*.ear
+.metadata
+gen-dal/
+SPID
+
+*.log
+*.log.*
