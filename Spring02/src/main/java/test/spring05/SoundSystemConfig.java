@@ -10,4 +10,5 @@ import org.springframework.context.annotation.ImportResource;
 @ImportResource(value = { "classpath:cd-config.xml"})
 public class SoundSystemConfig {
 
+	
 }
