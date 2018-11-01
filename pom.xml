@@ -10,6 +10,7 @@
   <properties>
   	<spring.version>4.1.4.RELEASE</spring.version>
   	<junit.version>4.9</junit.version>
+  	<aspectj.version>1.6.11</aspectj.version>
   </properties>
   
  
@@ -97,10 +98,25 @@
 			  <version>1.18.0</version>
 			</dependency>
 			
+			<!--使用AspectJ方式注解需要相应的包-->
+      		<dependency>
+            	<groupId>org.aspectj</groupId>
+           	 	<artifactId>aspectjrt</artifactId>
+            	<version>${aspectj.version}</version>
+        	</dependency>
+        	 <!--使用AspectJ方式注解需要相应的包-->
+       		<dependency>
+            <groupId>org.aspectj</groupId>
+	            <artifactId>aspectjweaver</artifactId>
+	            <version>${aspectj.version}</version>
+        	</dependency>
+
+
 
   </dependencies>
   <modules>
   	<module>Spring02</module>
+  	<module>Spring04</module>
   </modules>
   
   <build>  

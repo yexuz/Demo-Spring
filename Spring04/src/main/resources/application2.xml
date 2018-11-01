@@ -1,0 +1,46 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:cache="http://www.springframework.org/schema/cache"
+	   xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd"
+       default-autowire="byName">
+
+
+	<!-- <context:component-scan base-package="test.spring01"/> -->
+	
+	<bean id="blankDisc" class="test.spring02.BlankDisc">
+		<constructor-arg index="0" value="x"></constructor-arg>
+		<constructor-arg index="1" value="y"></constructor-arg>
+		<property name="tracks">
+			<list>
+				<value>zzz</value>
+				<value>xxx</value>
+				<value>ccc</value>
+				<value>vvv</value>
+				<value>bbb</value>
+				<value>nnn</value>
+			</list>
+		</property>
+	</bean>
+	
+ 	<bean id="trackCounter" class="test.spring02.TrackCounter"></bean>
+
+	<bean id="defaultEncoreable" class="test.spring02.DefaultEncoreable"></bean>
+
+	<aop:config>
+		<aop:aspect ref="trackCounter">
+			<aop:declare-parents types-matching="test.spring02.CompactDisc+" implement-interface="test.spring02.Encoreable" delegate-ref="defaultEncoreable"/>
+			<aop:before method="countTrack"  pointcut="execution(* test.spring02.CompactDisc.playTrack(int)) and args(trackNumber)" />
+		</aop:aspect>
+	</aop:config> 
+	
+	
+</beans>
