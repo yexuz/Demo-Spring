@@ -51,6 +51,7 @@ public class Spitter {
 	}
 	public Spitter(String firstName, String lastName, String username, String register) {
 		super();
+		this.id=0;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.username = username;

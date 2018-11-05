@@ -170,6 +170,7 @@
 		<module>Spring02</module>
 		<module>Spring04</module>
 		<module>Spring05</module>
+		<module>Spring06</module>
 	</modules>
 
 	<build>

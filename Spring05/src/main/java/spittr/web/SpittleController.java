@@ -31,17 +31,17 @@ public class SpittleController {
 		this.spittleRepository = repository;
 	}
 	// 1
-	// @RequestMapping(method=RequestMethod.GET)
-	// public String spittles(Model model) {
-	// model.addAttribute("spittleList",spittleRepository.findSpittles(Long.MAX_VALUE,
-	// 20));
-	// List<Spittle> spittles = new ArrayList<Spittle>();
-	// for (int i = 0; i < 20; i++) {
-	// spittles.add(new Spittle("Spittle" + i, new Date()));
-	// }
-	// model.addAttribute("spittleList",spittles);
-	// return "spittles";
-	// }
+	 @RequestMapping(method=RequestMethod.GET)
+	 public String spittles(Model model) {
+	 model.addAttribute("spittleList",spittleRepository.findSpittles(Long.MAX_VALUE,
+	 20));
+	 List<Spittle> spittles = new ArrayList<Spittle>();
+	 for (int i = 0; i < 20; i++) {
+	 spittles.add(new Spittle("Spittle" + i, new Date()));
+	 }
+	 model.addAttribute("spittleList",spittles);
+	 return "spittles";
+	 }
 
 	// 2
 	// @RequestMapping(method=RequestMethod.GET)
@@ -62,14 +62,14 @@ public class SpittleController {
 	// return spittleRepository.findSpittles(Long.MAX_VALUE, 20);
 	// }
 
-	@RequestMapping(method = RequestMethod.GET)
-	public List<Spittle> spittles(@RequestParam(value = "max", defaultValue = MAX_LONG_AS_STRING) long max,
-			@RequestParam(value = "count", defaultValue = "20") int count) {
-		List<Spittle> createSpittleList = createSpittleList(count);
-		// return spittleRepository.findSpittles(max, count);
-		return createSpittleList;
-
-	}
+//	@RequestMapping(method = RequestMethod.GET)
+//	public List<Spittle> spittles(@RequestParam(value = "max", defaultValue = MAX_LONG_AS_STRING) long max,
+//			@RequestParam(value = "count", defaultValue = "20") int count) {
+//		List<Spittle> createSpittleList = createSpittleList(count);
+//		// return spittleRepository.findSpittles(max, count);
+//		return createSpittleList;
+//
+//	}
 
 	@RequestMapping(value = "/{spittleId}", method = RequestMethod.GET)
 	public String showSpittles(@PathVariable("spittleId") long spittleId, Model model) {
