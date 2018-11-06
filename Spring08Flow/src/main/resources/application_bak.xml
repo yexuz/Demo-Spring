@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:flow="http://www.springframework.org/schema/webflow-config"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow-config 
+   http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.3.xsd
+   http://www.springframework.org/schema/beans 
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context 
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<flow:flow-executor id="flowExecutor" />
+	<!-- 
+	<flow:flow-registry id="flowRegistry"
+		base-path="/WEB-INF/flows">
+		<flow:flow-location-pattern
+			value="/**/*-flow.xml" />
+	</flow:flow-registry>
+ 	-->
+ 	<!-- 可以不使用base-path属性，直接显式地声明流程定义文件的位置 -->
+	<!-- 
+	<flow:flow-registry id="flowRegistry">
+		<flow:flow-location path="/WEB-INF/flows/springpizza.xml" />
+	</flow:flow-registry> 
+	-->
+	<!-- 如果你希望更显式地指定流程ID，那你可以通过<flow:flow-location>元素的id属性来进行设置。例如，要将pizza作为流程ID，可以像这样配置 -->
+	<flow:flow-registry id="flowRegistry">
+		<flow:flow-location id="pizza" path="/WEB-INF/flows/springpizza.xml" />
+	</flow:flow-registry> 
+	
+	<!-- FlowHandlerMapping装配了注册表的引用，这样它就知道如何将请求的URL匹配到流程上。
+	例如，如果有一个ID为pizza的流程，FlowHandlerMapping就会知道如果请求的URL是/pizza的话，就会将其匹配到这个流程上。 -->
+	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
+    	<property name="flowRegistry" ref="flowRegistry" />
+	</bean>
+	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerAdapter">
+    	<property name="flowExecutor" ref="flowExecutor" />
+	</bean>
+	
+	
+	
+	<!-- 视图状态 -->
+	<!-- 其一，它定义了流程中的状态。
+		 其二，因为这里没有其他地方指定视图，那么它就指定了流程到达这个状态时要展现的逻辑视图名称为welcome。 -->
+	<view-state id="welcome" />
+	<!-- 如果要显示地指定另外一个视图名称，那么就可以使用view属性： -->
+	<!-- <view-state id="welcome" view="greeting" /> -->
+	<!-- 如果流程为用户展现了一个表单，你希望指定表单所绑定的对象，可以使用model属性： -->
+	<view-state id="takePayment" model="flowScope.paymentDetails"/>
+	
+	
+	<!-- 行为状态 -->
+	<!-- 尽管没有严格要求，但是<action-state>元素一般都有一个<evaluate>子元素，
+		该元素给出了行为状态要做的事情，expression属性指定了进入这个状态时要评估的表达式。
+		本例中，给出的是SpEL表达式，这表明它将会找到ID为pizzaFlowActions的Bean，并调用其saveOrder()方法。 -->
+	<action-state id="saveOrder">
+    	<evaluate expression="pizzaFlowActions.saveOrder(order)" />
+    	<transition to="thankYou" />
+	</action-state>
+	
+	<!-- 决策状态 -->
+	<decision-state id="checkDeliveryArea">
+	    <if test="pizzaFlowActions.checkDeliveryArea(customer.zipCode)"
+	        then="addCustomer"
+	        else="deliveryWarning" />
+	</decision-state>
+	
+	<!-- 子流程状态 -->
+	<subflow-state id="order" subflow="pizza/order">
+	    <input name="order" value="order"/>
+	    <transition on="orderCreated" to="payment" />
+	</subflow-state>
+	
+	<!-- 结束状态 -->
+	<end-state id="customerReady" />
+	
+	<!-- 当流程到达<end-state>时，流程就会结束。接下来发生什么要取决于以下几个因素：
+		1.如果结束的流程是个子流程，那么调用它的流程将会从<subflow-state>处继续执行。
+			<end-state>的ID将会用作时间触发从<subflow-state>开始的转移。
+		2.如果<end-state>设置了view属性，那么就会渲染指定的视图。视图可以是相对于流程的路径，也可以是流程模板，
+			使用externalRedirect:前缀的会重定向到流程外部的页面，而使用flowRedirect:前缀的则会重定向到另外一个流程。
+		3.如果结束的流程不是子流程也没有配置view属性，那么这个流程就会结束。浏览器最后将会加载流程的基本URL地址，
+			同时，因为没有活动的流程，所以会开始一个新的流程实例。
+	 -->
+	 
+	 
+	 
+	 
+	 <!-- 转移 -->
+	 <transition to="customerReady" />
+	 <!-- 可以使用on属性来指定触发转移的事件 -->
+	 <transition on="phoneEntered" to="lookupCustomer"/>
+	 <!-- 在抛出异常时 -->
+	 <transition on-exception="com.springinaction.pizza.service.CustomerNotFoundException"
+    to="registrationForm" />
+    <!-- 全局转移 -->
+    <global-transitions>
+    	<transition on="cancel" to="endState" />
+	</global-transitions>
+    <!-- <transition on="cancel" to="endState" /> -->
+    
+    
+    <!-- 流程数据 --> 
+    <!-- 声明变量 -->
+    <var name="customer" class="com.springinaction.pizza.domain.Customer"/>
+    <!-- 这里<evaluate>元素计算了一个SpEL表达式，并将结果放到toppingsList变量中，这个变量是视图作用域的。 -->
+    <evaluate result="viewScope.toppingsList"
+    	expression="T(com.springinaction.pizza.domain.Topping).asList()" />
+    <set name="flowScope.pizza" value="new com.springinaction.pizza.domain.Pizza()" />
+    <!-- 作用域范围 
+    	Conversation	最高层级的流程开始时创建，在最高层级的流程结束时销毁。由最高层级的流程和其所有的子流程所共享
+		Flow			当流程开始时创建，在流程结束时销毁。只在创建它的流程中是可见的
+		Request			当一个请求进入流程时创建，流程返回时销毁
+		Flash			流程开始时创建，流程结束时销毁。在视图状态解析后，才会被清除
+		View			进入视图状态时创建，退出这个状态时销毁，只在视图状态内可见
+		
+		当使用<var>元素声明变量时，变量始终是流程作用域的，也就是在流程作用域内定义变量。
+		当使用<set>或<evaluate>时，作用域通过name或result属性的前缀指定。
+    -->
+    <set name="flowScope.theAnswer" value="42"/>
+</beans>

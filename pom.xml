@@ -75,12 +75,15 @@
 			<version>1.6.2.RELEASE</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${spring.version}</version>
-			<scope>test</scope>
+
+
+		 <dependency>
+		    <groupId>org.springframework.webflow</groupId>
+		    <artifactId>spring-webflow</artifactId>
+		    <version>2.4.5.RELEASE</version>
 		</dependency>
+
+
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpmime</artifactId>
@@ -178,6 +181,9 @@
 		<module>Spring05</module>
 		<module>Spring06</module>
 		<module>Spring07</module>
+		<module>Spring08Flow</module>
+
+		<module>ExampleFlowDemo</module>
 	</modules>
 
 	<build>
