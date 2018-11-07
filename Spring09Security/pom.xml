@@ -5,7 +5,7 @@
     <artifactId>Demo-Spring</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>ExampleFlowDemo</artifactId>
+  <artifactId>Spring09Security</artifactId>
   <packaging>war</packaging>
   
   <dependencies>
@@ -30,13 +30,6 @@
 			<groupId>org.thymeleaf</groupId>
 			<artifactId>thymeleaf-spring4</artifactId>
 			<version>3.0.2.RELEASE</version>
-		</dependency>
-
-
-		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk</artifactId>
-			<version>1.10.37</version>
 		</dependency>
 
 	</dependencies>
