@@ -1,0 +1,55 @@
+				<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:cache="http://www.springframework.org/schema/cache"
+	   xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:jee="http://www.springframework.org/schema/jee" 
+	   xmlns:jdbc="http://www.springframework.org/schema/jdbc" 
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd
+    http://www.springframework.org/schema/jee     
+	http://www.springframework.org/schema/jee/spring-jee-2.0.xsd"
+       default-autowire="byName">
+
+	
+	<!-- xml 中 jndi配置二选一 -->
+	<!-- <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">       
+	    <property name="jndiName" value="java:comp/env/jdbc/bbt"/>       
+	</bean>  -->
+	<!-- resource-ref属性设置为true，这样给定的jndi-name将会自动添加“java:comp/env/”前缀。 -->
+	<beans profile="ds1">
+	<jee:jndi-lookup id="dataSource" jndi-name="/jdbc/SpitterDS" resource-ref="true" />
+	</beans>
+	<!-- DBCP 连接池-->
+	<beans profile="ds2">
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+	  p:driverClassName="com.mysql.jdbc.Driver"
+	  p:url="jdbc:mysql://127.0.0.1:3306/springtest?useUnicode=true&amp;characterEncoding=UTF-8"
+	  p:username="root"
+	  p:password="123456"
+	  p:initialSize="5"
+	  p:maxActive="10" />
+	</beans>
+	<!-- jdbc -->
+	<beans profile="ds3">
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mysql://127.0.0.1:3306/springtest?useUnicode=true&amp;characterEncoding=UTF-8"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="123456"></property>
+	</bean>
+	</beans>
+	<!-- 嵌入式 -->
+	<beans profile="ds4">
+	<jdbc:embedded-database id="dataSource" type="H2">
+	  <jdbc:script location="com/habuma/spitter/db/jdbc/schema.sql" />
+	  <jdbc:script location="com/habuma/spitter/db/jdbc/test-data.sql" />
+	</jdbc:embedded-database>
+	</beans>
+</beans>

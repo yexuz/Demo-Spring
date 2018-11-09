@@ -210,6 +210,18 @@
 			<artifactId>druid</artifactId>
 			<version>1.0.16</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.32</version>
+		</dependency>
+		<dependency>
+		    <groupId>commons-dbcp</groupId>
+		    <artifactId>commons-dbcp</artifactId>
+		    <version>1.2.2</version>
+		</dependency>
+		
 	</dependencies>
 	<modules>
 		<module>Spring02</module>
@@ -221,6 +233,7 @@
 
 		<module>ExampleFlowDemo</module>
 		<module>Spring09Security</module>
+		<module>Spring10JDBC</module>
 	</modules>
 
 	<build>

@@ -3,6 +3,7 @@ package spittr.data;
 import spittr.Spitter;
 
 public interface SpitterRepository {
-	public Spitter save(Spitter spitter);
+	public void addSpitter(Spitter spitter);
+	public Spitter findOne(long id);
 	
 }
